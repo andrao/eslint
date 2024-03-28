@@ -1,0 +1,105 @@
+{
+    "name": "@andrao/eslint",
+    "version": "1.0.0",
+    "homepage": "https://github.com/andrao/eslint#readme",
+    "bugs": {
+        "url": "https://github.com/andrao/eslint/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/andrao/eslint.git"
+    },
+    "license": "MIT",
+    "author": "andrao",
+    "files": [
+        "./lib/base.js",
+        "./lib/nextjs.js",
+        "./lib/react.js"
+    ],
+    "scripts": {
+        "format": "andrao-prettier --check .",
+        "format:fix": "andrao-prettier --write .",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "prepare": "husky",
+        "typecheck": "tsc --noEmit"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "prettier": "@andrao/prettier",
+    "eslintConfig": {
+        "extends": [
+            "./lib/base.js"
+        ],
+        "root": true
+    },
+    "release": {
+        "branches": [
+            "main",
+            "next",
+            {
+                "name": "beta",
+                "prerelease": true
+            },
+            {
+                "name": "alpha",
+                "prerelease": true
+            }
+        ],
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/npm",
+            "@semantic-release/github",
+            [
+                "@semantic-release/git",
+                {
+                    "assets": [
+                        "CHANGELOG.md",
+                        "package.json",
+                        "pnpm-lock.yaml"
+                    ],
+                    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                }
+            ]
+        ]
+    },
+    "dependencies": {
+        "@next/eslint-plugin-next": "^14.0.4",
+        "@tanstack/eslint-plugin-query": "^5.20.1",
+        "@typescript-eslint/eslint-plugin": "^6.20.0",
+        "@typescript-eslint/parser": "^6.20.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-config-turbo": "^1.12.2",
+        "eslint-import-resolver-typescript": "^3.6.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-json": "^3.1.0",
+        "eslint-plugin-jsx-a11y": "^6.8.0",
+        "eslint-plugin-prettier": "^5.1.2",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.5",
+        "eslint-plugin-storybook": "^0.6.15",
+        "eslint-plugin-unicorn": "^50.0.1"
+    },
+    "devDependencies": {
+        "@andrao/prettier": "^1.0.1",
+        "@andrao/tsconfig": "*",
+        "@semantic-release/git": "^10.0.1",
+        "@types/eslint": "^8.56.0",
+        "commitizen": "^4.3.0",
+        "cz-conventional-changelog": "^3.3.0",
+        "eslint": "^8.57.0",
+        "husky": "^9.0.11",
+        "semantic-release": "^23.0.6",
+        "typescript": "^5.4.3"
+    },
+    "packageManager": "pnpm@8.14.1",
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
+    }
+}
