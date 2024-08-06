@@ -23,8 +23,6 @@ jobs:
             # Install pnpm globally
             - name: Install pnpm
               uses: pnpm/action-setup@v3
-              with:
-                  version: 8
 
             # Install Node.js & establish pnpm cache
             - name: Install Node.js
@@ -63,8 +61,6 @@ jobs:
             # Install pnpm globally
             - name: Install pnpm
               uses: pnpm/action-setup@v3
-              with:
-                  version: 8
 
             # Install Node.js & establish pnpm cache
             - name: Install Node.js
