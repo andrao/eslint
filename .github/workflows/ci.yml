@@ -12,38 +12,46 @@ concurrency:
     cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+    audit:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+            pull-requests: write
+        steps:
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/install-dependencies
+              with:
+                  ignore-scripts: true
+            - name: Audit dependencies
+              run: pnpm audit
+
     format:
+        needs: audit
         runs-on: ubuntu-latest
         steps:
-            # --- Start setup --- #
-            # Checkout repo
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            # Install pnpm globally
-            - name: Install pnpm
-              uses: pnpm/action-setup@v3
-
-            # Install Node.js & establish pnpm cache
-            - name: Install Node.js
-              uses: actions/setup-node@v4
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/install-dependencies
               with:
-                  node-version-file: .nvmrc
-                  cache: pnpm
-
-            # Install repo dependencies
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-            # --- End setup --- #
-
-            # Run
+                  ignore-scripts: true
             - name: Format
               run: pnpm format
+
+    lint:
+        needs: audit
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/install-dependencies
+              with:
+                  ignore-scripts: true
+            - name: Lint
+              run: pnpm lint
 
     release:
         if: github.event_name == 'push'
         needs:
             - format
+            - lint
 
         runs-on: ubuntu-latest
         permissions:
@@ -53,32 +61,10 @@ jobs:
             id-token: write # to enable use of OIDC for npm provenance
 
         steps:
-            # --- Start setup --- #
-            # Checkout repo
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            # Install pnpm globally
-            - name: Install pnpm
-              uses: pnpm/action-setup@v3
-
-            # Install Node.js & establish pnpm cache
-            - name: Install Node.js
-              uses: actions/setup-node@v4
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/install-dependencies
               with:
-                  node-version-file: .nvmrc
-                  cache: pnpm
-
-            # Install repo dependencies
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-            # --- End setup --- #
-
-            # Audit deps
-            - name: Audit dependencies
-              run: pnpm audit
-
-            # Release
+                  ignore-scripts: true
             - name: Release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
