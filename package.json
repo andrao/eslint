@@ -12,9 +12,9 @@
     "license": "MIT",
     "author": "andrao",
     "files": [
-        "./lib/base.js",
-        "./lib/nextjs.js",
-        "./lib/react.js"
+        "./lib",
+        "package.json",
+        "README.md"
     ],
     "scripts": {
         "format": "andrao-prettier --check .",
